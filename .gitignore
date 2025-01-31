@@ -142,3 +142,4 @@ dist
 
 # all *-exerciesea.js solo para push .no pull
 *-exerciesea.js
+*.cjs
