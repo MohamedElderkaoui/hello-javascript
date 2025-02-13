@@ -47,7 +47,7 @@ class Usuario {
         return this.#edad;
     }
 
-    set edad(nuevaEdad) {
+    set #edad(nuevaEdad) {
         if (nuevaEdad > 0) {
             this.#edad = nuevaEdad;
         } else {
