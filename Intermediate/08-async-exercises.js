@@ -139,7 +139,7 @@ getUser(3);  // Ejecutar la función getUser() en una consola para ver los resul
 //    setTimeout(() => console.log("setTimeout ejecutado"), 0)
 //    Promise.resolve().then(() => console.log("Promesa resuelta"))
 //    console.log("Fin")
-º
+
 console.log("Inicio");
 
 setTimeout(() => console.log("setTimeout ejecutado"), 0);

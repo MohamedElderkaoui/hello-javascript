@@ -161,7 +161,7 @@ deletePost(1);
 
 // 8. Crea una función que realice una solicitud GET (la que quieras) a OpenWeatherMap
 async function getWeather(city) {
-    const API_KEY = 'TU_API_KEY';
+    const API_KEY = 'f872851cb9b20864da179eae9184d4c8';
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
   
     try {
@@ -177,35 +177,64 @@ async function getWeather(city) {
   
   getWeather('Buenos Aires');
   
-// 9. Utiliza la PokéAPI para obtener los datos de un Pokémon concreto, a continuación los detalles de la especie y, finalmente, la cadena evolutiva a partir de la especie
+// 9. Utiliza la PokéAPI para obtener los datos de un Pokémon concreto, a continuación los detalles de la especie y, finalmente, la cadena evolutiva a partir de la especieasync
 async function getPokemonData(pokemon) {
     try {
-      // Obtener datos del Pokémon
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
-      if (!response.ok) throw new Error(`Error al obtener ${pokemon}`);
-      const pokemonData = await response.json();
-      
-      console.log('Datos del Pokémon:', pokemonData);
-  
-      // Obtener detalles de la especie
-      const speciesResponse = await fetch(pokemonData.species.url);
-      if (!speciesResponse.ok) throw new Error(`Error al obtener la especie de ${pokemon}`);
-      const speciesData = await speciesResponse.json();
-  
-      console.log('Detalles de la especie:', speciesData);
-  
-      // Obtener cadena evolutiva
-      const evolutionResponse = await fetch(speciesData.evolution_chain.url);
-      if (!evolutionResponse.ok) throw new Error(`Error al obtener la evolución de ${pokemon}`);
-      const evolutionData = await evolutionResponse.json();
-  
-      console.log('Cadena evolutiva:', evolutionData);
+        // Obtener datos del Pokémon
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
+        if (!response.ok) throw new Error(`Error al obtener ${pokemon}`);
+        const pokemonData = await response.json();
+        
+        console.log(`\n📌 Datos del Pokémon: ${pokemonData.name.toUpperCase()}`);
+        console.table({
+            'Nombre': pokemonData.name,
+            'ID': pokemonData.id,
+            'Altura': pokemonData.height,
+            'Peso': pokemonData.weight,
+            'Tipo(s)': pokemonData.types.map(t => t.type.name).join(', ')
+        });
+
+        // Obtener detalles de la especie
+        const speciesResponse = await fetch(pokemonData.species.url);
+        if (!speciesResponse.ok) throw new Error(`Error al obtener la especie de ${pokemon}`);
+        const speciesData = await speciesResponse.json();
+        
+        console.log(`\n📌 Detalles de la Especie`);
+        console.table({
+            'Color': speciesData.color.name,
+            'Hábitat': speciesData.habitat?.name || 'Desconocido',
+            'Generación': speciesData.generation.name
+        });
+
+        // Obtener cadena evolutiva
+        const evolutionResponse = await fetch(speciesData.evolution_chain.url);
+        if (!evolutionResponse.ok) throw new Error(`Error al obtener la evolución de ${pokemon}`);
+        const evolutionData = await evolutionResponse.json();
+
+        // Extraer la cadena evolutiva en un formato legible
+        function extractEvolutionChain(chain) {
+            let evolutionList = [];
+            let current = chain;
+            
+            while (current) {
+                evolutionList.push({ 'Evolución': current.species.name });
+                current = current.evolves_to.length ? current.evolves_to[0] : null;
+            }
+            return evolutionList;
+        }
+
+        console.log(`\n📌 Cadena Evolutiva`);
+        console.table(extractEvolutionChain(evolutionData.chain));
+
     } catch (error) {
-      console.error('Error:', error);
+        console.error('❌ Error:', error.message);
     }
-  }
-  
-  getPokemonData('pikachu');
+}
+
+
+// 🔥 Llamar a la función con un Pokémon de ejemplo
+getPokemonData('pikachu');
+
   
 
 // 10. Utiliza una herramienta como Postman o Thunder Client para probar diferentes endpoint de una API
